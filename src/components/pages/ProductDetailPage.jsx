@@ -233,18 +233,6 @@ Save ₹{(product.originalPrice_c - product.price_c).toLocaleString()}
                       {size.trim()}
                     </button>
                   ))}
-                    <button
-                      key={size}
-                      onClick={() => setSelectedSize(size)}
-                      className={`px-4 py-2 border rounded-lg transition-colors ${
-                        selectedSize === size
-                          ? "bg-primary text-white border-primary"
-                          : "bg-white text-gray-700 border-gray-300 hover:border-primary"
-                      }`}
-                    >
-                      {size}
-                    </button>
-                  ))}
                 </div>
               </div>
             )}
@@ -274,18 +262,6 @@ Save ₹{(product.originalPrice_c - product.price_c).toLocaleString()}
                       }}
                       title={color.trim()}
                     />
-                  ))}
-                    <button
-                      key={color}
-                      onClick={() => setSelectedColor(color)}
-                      className={`px-4 py-2 border rounded-lg transition-colors ${
-                        selectedColor === color
-                          ? "bg-primary text-white border-primary"
-                          : "bg-white text-gray-700 border-gray-300 hover:border-primary"
-                      }`}
-                    >
-                      {color}
-                    </button>
                   ))}
                 </div>
               </div>
