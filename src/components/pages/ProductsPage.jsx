@@ -52,41 +52,41 @@ const ProductsPage = () => {
   }, [searchParams]);
 
   // Apply filters and sorting
-  useEffect(() => {
+useEffect(() => {
     let filtered = [...products];
 
     // Apply category filter
     if (filters.categories && filters.categories.length > 0) {
       filtered = filtered.filter(product => 
-        filters.categories.includes(product.category.toLowerCase())
+        filters.categories.includes(product.category_c?.toLowerCase())
       );
     }
 
     // Apply size filter
     if (filters.sizes && filters.sizes.length > 0) {
       filtered = filtered.filter(product => 
-        product.sizes && product.sizes.some(size => filters.sizes.includes(size))
+        product.sizes_c && product.sizes_c.split(',').some(size => filters.sizes.includes(size.trim()))
       );
     }
 
     // Apply color filter
     if (filters.colors && filters.colors.length > 0) {
       filtered = filtered.filter(product => 
-        product.colors && product.colors.some(color => filters.colors.includes(color))
+        product.colors_c && product.colors_c.split(',').some(color => filters.colors.includes(color.trim()))
       );
     }
 
     // Apply brand filter
     if (filters.brands && filters.brands.length > 0) {
       filtered = filtered.filter(product => 
-        filters.brands.includes(product.brand)
+        filters.brands.includes(product.brand_c)
       );
     }
 
     // Apply price range filter
     if (filters.priceRange && (filters.priceRange.min || filters.priceRange.max)) {
       filtered = filtered.filter(product => {
-        const price = product.price;
+        const price = product.price_c;
         const min = filters.priceRange.min || 0;
         const max = filters.priceRange.max || Infinity;
         return price >= min && price <= max;
@@ -94,18 +94,18 @@ const ProductsPage = () => {
     }
 
     // Apply sorting
-    switch (sortBy) {
+switch (sortBy) {
       case "price-low":
-        filtered.sort((a, b) => a.price - b.price);
+        filtered.sort((a, b) => a.price_c - b.price_c);
         break;
       case "price-high":
-        filtered.sort((a, b) => b.price - a.price);
+        filtered.sort((a, b) => b.price_c - a.price_c);
         break;
       case "newest":
         filtered.sort((a, b) => b.Id - a.Id);
         break;
       case "rating":
-        filtered.sort((a, b) => (b.rating || 0) - (a.rating || 0));
+        filtered.sort((a, b) => (b.rating_c || 0) - (a.rating_c || 0));
         break;
       default:
         // popularity - keep original order
@@ -139,8 +139,8 @@ const ProductsPage = () => {
   };
 
   // Get unique values for filter options
-  const categories = [...new Set(products.map(p => p.category))];
-  const brands = [...new Set(products.map(p => p.brand))];
+const categories = [...new Set(products.map(p => p.category_c).filter(Boolean))];
+  const brands = [...new Set(products.map(p => p.brand_c).filter(Boolean))];
 
   const sortOptions = [
     { value: "popularity", label: "Popularity" },

@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import SearchBar from "@/components/molecules/SearchBar";
-import ApperIcon from "@/components/ApperIcon";
+import { useSelector } from "react-redux";
+import { AuthContext } from "@/contexts/AuthContext";
 import { useCart } from "@/hooks/useCart";
 import { useWishlist } from "@/hooks/useWishlist";
+import ApperIcon from "@/components/ApperIcon";
+import SearchBar from "@/components/molecules/SearchBar";
 
 const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -11,13 +13,24 @@ const Header = () => {
   const { cartCount } = useCart();
   const { wishlistCount } = useWishlist();
 
+  const { logout } = useContext(AuthContext);
+  const { user, isAuthenticated } = useSelector((state) => state.user);
   const categories = [
-    { name: "Men", path: "/category/men" },
-    { name: "Women", path: "/category/women" },
-    { name: "Kids", path: "/category/kids" },
-    { name: "Accessories", path: "/category/accessories" },
+    { name: "Clothing", path: "/category/Clothing" },
+    { name: "Shoes", path: "/category/Shoes" },
+    { name: "Accessories", path: "/category/Accessories" },
+    { name: "Jewelry", path: "/category/Jewelry" },
+    { name: "Beauty", path: "/category/Beauty" },
     { name: "Sale", path: "/sale" }
   ];
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+    } catch (error) {
+      console.error("Logout error:", error);
+    }
+  };
 
   const handleSearch = (query) => {
     if (query.trim()) {
@@ -40,7 +53,7 @@ const Header = () => {
             </span>
           </Link>
 
-          {/* Desktop Navigation */}
+{/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center space-x-8">
             {categories.map((category) => (
               <Link
@@ -107,7 +120,7 @@ const Header = () => {
         </div>
 
         {/* Mobile Navigation Menu */}
-        {isMobileMenuOpen && (
+{isMobileMenuOpen && (
           <div className="lg:hidden border-t border-gray-200 py-4">
             <nav className="flex flex-col space-y-4">
               {categories.map((category) => (
@@ -120,9 +133,72 @@ const Header = () => {
                   {category.name}
                 </Link>
               ))}
+              {/* User Authentication Section */}
+              {isAuthenticated && user ? (
+                <div className="border-t pt-4 mt-4">
+                  <div className="px-2 py-1 text-sm text-gray-600">
+                    Welcome, {user.firstName || user.name || 'User'}
+                  </div>
+                  <button
+                    onClick={handleLogout}
+                    className="w-full text-left px-2 py-1 text-error hover:bg-gray-100 rounded transition-colors"
+                  >
+                    Logout
+                  </button>
+                </div>
+              ) : (
+                <div className="border-t pt-4 mt-4 space-y-2">
+                  <Link
+                    to="/login"
+                    className="block px-2 py-1 text-primary hover:bg-gray-100 rounded transition-colors"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    Login
+                  </Link>
+                  <Link
+                    to="/signup"
+                    className="block px-2 py-1 text-primary hover:bg-gray-100 rounded transition-colors"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    Sign Up
+                  </Link>
+</div>
+              )}
             </nav>
           </div>
         )}
+        
+        {/* Desktop User Menu */}
+        <div className="hidden md:flex items-center space-x-4">
+          {isAuthenticated && user ? (
+            <div className="flex items-center space-x-3">
+              <span className="text-sm text-gray-600">
+                Welcome, {user.firstName || user.name || 'User'}
+              </span>
+              <button
+                onClick={handleLogout}
+                className="text-sm text-error hover:text-red-600 transition-colors font-medium"
+              >
+                Logout
+              </button>
+            </div>
+          ) : (
+            <div className="flex items-center space-x-3">
+              <Link
+                to="/login"
+                className="text-sm text-primary hover:text-accent transition-colors font-medium"
+              >
+                Login
+              </Link>
+              <Link
+                to="/signup"
+                className="text-sm bg-primary text-white px-4 py-2 rounded-lg hover:bg-accent transition-colors font-medium"
+              >
+                Sign Up
+              </Link>
+            </div>
+          )}
+        </div>
       </div>
     </header>
   );

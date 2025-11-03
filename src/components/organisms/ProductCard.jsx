@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
+import { toast } from "react-toastify";
 import ApperIcon from "@/components/ApperIcon";
+import Badge from "@/components/atoms/Badge";
 import PriceDisplay from "@/components/molecules/PriceDisplay";
 import RatingDisplay from "@/components/molecules/RatingDisplay";
-import Badge from "@/components/atoms/Badge";
-import { toast } from "react-toastify";
 
 const ProductCard = ({ 
   product, 
@@ -38,25 +38,25 @@ const ProductCard = ({
     e.preventDefault();
     e.stopPropagation();
     
-    const wishlistItem = {
+const wishlistItem = {
       productId: product.Id.toString(),
-      title: product.title,
-      image: product.images[0],
-      price: product.price,
-      discount: product.discount
+      title: product.title_c,
+      image: product.images_c ? product.images_c.split(',')[0] : '',
+      price: product.price_c,
+      discount: product.discount_c
     };
     
     onToggleWishlist(wishlistItem);
     
-    if (isWishlisted) {
-      toast.info(`${product.title} removed from wishlist`);
+if (isWishlisted) {
+      toast.info(`${product.title_c} removed from wishlist`);
     } else {
-      toast.success(`${product.title} added to wishlist!`);
+      toast.success(`${product.title_c} added to wishlist!`);
     }
   };
 
-  const discountPercentage = product.originalPrice > product.price 
-    ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
+const discountPercentage = product.originalPrice_c > product.price_c 
+    ? Math.round(((product.originalPrice_c - product.price_c) / product.originalPrice_c) * 100)
     : 0;
 
   return (
@@ -71,9 +71,9 @@ const ProductCard = ({
           {/* Product Image */}
           <div className="relative aspect-[3/4] overflow-hidden">
 {!imageError && product.images && product.images[0] ? (
-              <img
-                src={product.images[0]}
-                alt={product.title}
+<img
+                src={product.images_c ? product.images_c.split(',')[0] : ''}
+                alt={product.title_c}
                 className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
                 onError={() => setImageError(true)}
               />
@@ -127,39 +127,38 @@ const ProductCard = ({
           <div className="p-4">
             <div className="mb-2">
               <h3 className="font-medium text-secondary line-clamp-2 mb-1">
-                {product.title}
+{product.title_c}
               </h3>
-              <p className="text-sm text-gray-500 mb-2">{product.brand}</p>
+<p className="text-sm text-gray-500 mb-2">{product.brand_c}</p>
             </div>
 
             <div className="mb-2">
               <PriceDisplay
-                price={product.price}
-                originalPrice={product.originalPrice}
+price={product.price_c}
+                originalPrice={product.originalPrice_c}
                 discount={discountPercentage}
               />
             </div>
 
-            {product.rating && (
+{product.rating_c && (
               <RatingDisplay
-                rating={product.rating}
-                reviewCount={product.reviewCount}
+                rating={product.rating_c}
+                reviewCount={product.reviewCount_c}
               />
             )}
-
-            {/* Size Options Preview */}
-            {product.sizes && product.sizes.length > 0 && (
+{/* Size Options Preview */}
+            {product.sizes_c && (
               <div className="flex gap-1 mt-2">
-                {product.sizes.slice(0, 4).map((size) => (
+                {product.sizes_c.split(',').slice(0, 4).map((size) => (
                   <span
                     key={size}
                     className="text-xs border border-gray-300 px-1.5 py-0.5 rounded"
                   >
-                    {size}
+                    {size.trim()}
                   </span>
                 ))}
-                {product.sizes.length > 4 && (
-                  <span className="text-xs text-gray-500">+{product.sizes.length - 4}</span>
+                {product.sizes_c.split(',').length > 4 && (
+                  <span className="text-xs text-gray-500">+{product.sizes_c.split(',').length - 4}</span>
                 )}
               </div>
             )}

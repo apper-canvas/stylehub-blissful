@@ -20,9 +20,8 @@ const HomePage = () => {
     try {
       setLoading(true);
       setError(null);
-      const products = await productService.getAll();
-      // Get first 8 products as featured
-      setFeaturedProducts(products.slice(0, 8));
+const products = await productService.getFeatured();
+      setFeaturedProducts(products);
     } catch (err) {
       setError(err.message || "Failed to load featured products");
     } finally {
