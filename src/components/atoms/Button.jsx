@@ -11,6 +11,7 @@ const Button = forwardRef(({
   iconPosition = "left",
   disabled,
   loading,
+  asChild,
   ...props 
 }, ref) => {
   const variants = {
