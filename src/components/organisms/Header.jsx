@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { AuthContext } from "@/contexts/AuthContext";
+import { AuthContext } from "@/App";
 import { useCart } from "@/hooks/useCart";
 import { useWishlist } from "@/hooks/useWishlist";
 import ApperIcon from "@/components/ApperIcon";
