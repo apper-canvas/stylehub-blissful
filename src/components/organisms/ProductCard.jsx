@@ -70,7 +70,7 @@ const ProductCard = ({
         <div className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-xl transition-shadow duration-300">
           {/* Product Image */}
           <div className="relative aspect-[3/4] overflow-hidden">
-            {!imageError ? (
+{!imageError && product.images && product.images[0] ? (
               <img
                 src={product.images[0]}
                 alt={product.title}
